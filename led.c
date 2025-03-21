@@ -54,8 +54,10 @@ void OnGreenLed(int led)
 }
 
 void green_led_thread (void *argument) {
- 
 	int count = 0;
+	InitGreenLed();
+  OffAllGreenLed();
+	
   for (;;) {
 		OffAllGreenLed();
 		OnGreenLed(count);
