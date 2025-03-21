@@ -3,7 +3,7 @@
  * Auto generated Run-Time-Environment Configuration File
  *      *** Do not modify ! ***
  *
- * Project: 'CG2271' 
+ * Project: 'ProjectMotorControl' 
  * Target:  'Target 1' 
  */
 
