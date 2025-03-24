@@ -388,14 +388,14 @@
               <FilePath>.\main.c</FilePath>
             </File>
             <File>
-              <FileName>led.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\led.c</FilePath>
+              <FileName>green_led.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\green_led.h</FilePath>
             </File>
             <File>
-              <FileName>led.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\led.h</FilePath>
+              <FileName>green_led.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\green_led.c</FilePath>
             </File>
           </Files>
         </Group>
