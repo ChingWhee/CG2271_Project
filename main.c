@@ -13,9 +13,15 @@
  *---------------------------------------------------------------------------*/
 void app_main (void *argument) {
  
+	move_right_forward_wheel(7500, 0);
   // ...
   for (;;) {
-		move_right_forward_wheel(7500, 0);
+		
+		//PTD->PCOR = MASK(0);
+		//PTD->PSOR = MASK(1);
+		//TPM0_C0V = 7500;
+		//TPM0_C1V = 0;
+		
 		//move(PWM_PERIOD, 0, 0);
 		//osDelay(5000);
 		//move(0, 0, 0);

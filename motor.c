@@ -15,6 +15,8 @@ void initMotor(void) {
 	PORTD->PCR[RIGHT_FRONT_PWM_BWD] &= ~PORT_PCR_MUX_MASK;
   PORTD->PCR[RIGHT_FRONT_PWM_BWD] |= PORT_PCR_MUX(4);
 	
+	//PTD->PDDR |= (MASK(0) | MASK(1));
+	
 	PORTD->PCR[RIGHT_BACK_PWM_FWD] &= ~PORT_PCR_MUX_MASK;
   PORTD->PCR[RIGHT_BACK_PWM_FWD] |= PORT_PCR_MUX(4);
 	
@@ -32,6 +34,10 @@ void initMotor(void) {
 	
 	PORTE->PCR[LEFT_BACK_PWM_BWD] &= ~PORT_PCR_MUX_MASK;
   PORTE->PCR[LEFT_BACK_PWM_BWD] |= PORT_PCR_MUX(3);
+	
+	// Select clock for TPM module
+  SIM->SOPT2 &= ~SIM_SOPT2_TPMSRC_MASK;
+  SIM->SOPT2 |= SIM_SOPT2_TPMSRC(1); // MCGFLLCLK or MCGPLLCLK/2
 	
 	// Set Modulo Value 48000000 / 128 = 375000 / 50Hz = 7500
   TPM1->MOD = PWM_PERIOD;
@@ -81,11 +87,11 @@ void initMotor(void) {
 
 void move_right_forward_wheel(uint16_t speed, uint8_t direction) {
 	if (direction) {
-		TPM0_C0V = speed;
-		TPM0_C1V = 0;
-	} else {
 		TPM0_C0V = 0;
 		TPM0_C1V = speed;
+	} else {
+		TPM0_C0V = speed;
+		TPM0_C1V = 0;
 	}
 }
 
@@ -140,18 +146,18 @@ void turn_left_on_spot(uint16_t speed) {
 	move_left_backward_wheel(0, 1);
 }
 
-void turn_left_smooth(uint16_t base_speed, uint16_t turn_factor) {
-  move_left_forward_wheel(base_speed - turn_factor, 1);
-	move_left_backward_wheel(base_speed - turn_factor, 1);
-  move_right_forward_wheel(base_speed, 1);
-	move_right_backward_wheel(base_speed, 1);
+void turn_left_smooth(uint16_t base_speed, uint16_t turn_factor, uint8_t direction) {
+  move_left_forward_wheel(base_speed - turn_factor, direction);
+	move_left_backward_wheel(base_speed - turn_factor, direction);
+  move_right_forward_wheel(base_speed, direction);
+	move_right_backward_wheel(base_speed, direction);
 }
 
-void turn_right_smooth(uint16_t base_speed, uint16_t turn_factor) {
-	move_left_forward_wheel(base_speed, 1);
-	move_left_backward_wheel(base_speed, 1);
-	move_right_forward_wheel(base_speed - turn_factor, 1);
-	move_right_backward_wheel(base_speed - turn_factor, 1);
+void turn_right_smooth(uint16_t base_speed, uint16_t turn_factor, uint8_t direction) {
+	move_left_forward_wheel(base_speed, direction);
+	move_left_backward_wheel(base_speed, direction);
+	move_right_forward_wheel(base_speed - turn_factor, direction);
+	move_right_backward_wheel(base_speed - turn_factor, direction);
 }
 
 void stop_car() {
@@ -162,42 +168,38 @@ void stop_car() {
 }
 
 
-void move(int base_speed, int direction, int turn_factor){
- /*
-	* Direction: 
-	* 0 - move forward
-	* 1 - move_backward
-	* 2 - on the spot left
-	* 3 - on the spot right
-	* 4 - smooth left
-	* 5 - smooth right
-	*/
+void move(int base_speed, int turn_factor){
+	// Forward is Negative
+	// Left is Negative
+	
+	int fwd_direction;
+	if (base_speed < 0) {
+		base_speed = -base_speed;
+		fwd_direction = 1;
+	} else {
+		fwd_direction = 0;
+	}
+	
+	int right_direction;
+	if (turn_factor < 0) {
+		turn_factor = -turn_factor;
+		right_direction = 0;
+	} else {
+		right_direction = 1;
+	}
 	
 	if (base_speed == 0) {
-		stop_car();
-	} else {
-		switch (direction) {
-			case 0:
-				move_forward_or_backward(base_speed, 1);
-				break;
-			case 1:
-				move_forward_or_backward(base_speed, 0);
-				break;
-			case 2:
-				turn_left_on_spot(base_speed);
-				break;
-			case 3:
-				turn_right_on_spot(base_speed);
-				break;
-			case 4:
-				turn_left_smooth(base_speed, turn_factor);
-				break;
-			case 5:
-				turn_right_smooth(base_speed, turn_factor);
-				break;
-			default:
-				break;
+		if (turn_factor != 0) {
+			if (right_direction) turn_right_on_spot(turn_factor);
+			else turn_left_on_spot(turn_factor);
+		} else {
+			stop_car();
 		}
 	}
 	
+	else if (right_direction) { // turn right
+		turn_right_smooth(base_speed, turn_factor, fwd_direction);
+	} else {
+		turn_left_smooth(base_speed, turn_factor, fwd_direction);
+	}
 }

@@ -6,6 +6,8 @@
 #include  CMSIS_device_header
 #include "cmsis_os2.h"
 
+#define MASK(x) (1 << (x))
+
 /*----------------------------------------------------------------------------
  * PWM Pins for Motor Driver
  *---------------------------------------------------------------------------*/
@@ -36,10 +38,10 @@ void move_forward_or_backward(uint16_t speed, uint8_t direction);
 
 void turn_right_on_spot(uint16_t speed);
 void turn_left_on_spot(uint16_t speed);
-void turn_left_smooth(uint16_t base_speed, uint16_t turn_factor);
-void turn_right_smooth(uint16_t base_speed, uint16_t turn_factor);
+void turn_left_smooth(uint16_t base_speed, uint16_t turn_factor, uint8_t direction);
+void turn_right_smooth(uint16_t base_speed, uint16_t turn_factor, uint8_t direction);
 void stop_car(void);
 
-void move(int base_speed, int direction, int turn_factor);
+void move(int base_speed, int turn_factor);
 
 #endif // MOTOR_H
