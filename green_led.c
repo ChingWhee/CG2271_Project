@@ -14,19 +14,21 @@
 #define GREEN_LED_8 10
 #define GREEN_LED_9 11
 
+#define RED_LED 8
+
 #define MASK(x) (1 << (x))
 
-int moving_flag = 0;
+int isMoving = 0;
 #define LED_DELAY 200
 	
-void InitGreenLed(void)
+void InitLed(void)
 {
 	// Enable Clock to PORTC
 	SIM->SCGC5 |= (SIM_SCGC5_PORTC_MASK);
 
 	// Configure MUX settings to make all green LED pins `
 	// PTC0 - 7
-	for (int i = 0; i < 8; i++) {
+	for (int i = 0; i < 9; i++) {
 		PORTC->PCR[i] &= ~PORT_PCR_MUX_MASK;
 		PORTC->PCR[i] |= PORT_PCR_MUX(1);
 	}
@@ -37,7 +39,7 @@ void InitGreenLed(void)
 	}
 
 	// Set Data Direction Registers for PortC
-	for (int i = 0; i < 8; i++) {
+	for (int i = 0; i < 9; i++) {
 		PTC->PDDR |= MASK(i);
 	}
 	for (int i = 10; i < 12; i++) {
@@ -70,16 +72,37 @@ void OnGreenLed(int led)
 	PTC->PSOR |= MASK(led);
 }
 
+//active-low
+void onRedLED(){
+	PTC->PCOR |= MASK(RED_LED);
+}
+
+//active-low
+void offRedLED(){
+	PTC->PSOR |= MASK(RED_LED);
+}
+
+void red_led_thread(void *argument){
+	offRedLED();
+	for(;;){
+		onRedLED();
+		uint16_t red_led_delay = isMoving ? 500 : 250 ;
+		osDelay(red_led_delay);
+		offRedLED();
+		osDelay(red_led_delay);
+	}	
+}
+
 void green_led_thread (void *argument) {
 	int count = 0;
-	InitGreenLed();
+	InitLed();
   OffAllGreenLed();
+	offRedLED();
 	
   for (;;) {
-		if (moving_flag) {
+		if (isMoving) {
 			OffAllGreenLed();
 			OnGreenLed(count);
-
 			count++;
 			// If count is 8, skip to 10
 			// If count is 12, reset to 0
