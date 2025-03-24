@@ -152,9 +152,9 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>196</LineNumber>
+          <LineNumber>273</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>6608</Address>
+          <Address>3336</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -163,14 +163,14 @@
           <BreakIfRCount>1</BreakIfRCount>
           <Filename>.\main.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\\main.c\196</Expression>
+          <Expression>\\\main.c\273</Expression>
         </Bp>
         <Bp>
           <Number>1</Number>
           <Type>0</Type>
-          <LineNumber>188</LineNumber>
+          <LineNumber>230</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>6546</Address>
+          <Address>3142</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -179,9 +179,48 @@
           <BreakIfRCount>1</BreakIfRCount>
           <Filename>.\main.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\CG2271\main.c\188</Expression>
+          <Expression>\\CG2271\main.c\230</Expression>
+        </Bp>
+        <Bp>
+          <Number>2</Number>
+          <Type>0</Type>
+          <LineNumber>252</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>0</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>0</BreakIfRCount>
+          <Filename>.\main.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression></Expression>
+        </Bp>
+        <Bp>
+          <Number>3</Number>
+          <Type>0</Type>
+          <LineNumber>272</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>0</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>0</BreakIfRCount>
+          <Filename>.\main.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression></Expression>
         </Bp>
       </Breakpoint>
+      <WatchWindow1>
+        <Ww>
+          <count>0</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>UART1-&gt;D</ItemText>
+        </Ww>
+      </WatchWindow1>
       <ScvdPack>
         <Filename>C:\Users\clair\AppData\Local\Arm\Packs\ARM\CMSIS\5.6.0\CMSIS\RTOS2\RTX\RTX5.scvd</Filename>
         <Type>ARM.CMSIS.5.6.0</Type>
@@ -254,7 +293,7 @@
 
   <Group>
     <GroupName>::CMSIS</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>1</RteFlg>
@@ -262,7 +301,7 @@
 
   <Group>
     <GroupName>::Device</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>1</RteFlg>

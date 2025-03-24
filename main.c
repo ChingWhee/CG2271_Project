@@ -6,9 +6,10 @@
 #include  CMSIS_device_header
 #include "cmsis_os2.h"
  
-#define RED_LED 18 // PortB Pin 18
-#define GREEN_LED 19 // PortB Pin 19
-#define BLUE_LED 1 // PortD Pin 1
+#define RED_LED 12 // PortB Pin 18
+#define GREEN_LED 13 // PortB Pin 19
+#define BLUE_LED 16 // PortD Pin 1
+#define WHITE_LED 17
 #define SWITCH 6 // PortD Pin 6
 #define MASK(x) (1 << (x))
 
@@ -20,7 +21,8 @@ osMutexId_t myMutex;
 typedef enum {
     RED,
     GREEN,
-    BLUE
+    BLUE,
+		WHITE
 } colour_t;
 
 const osThreadAttr_t thread_attr = {
@@ -37,17 +39,18 @@ static void delay(volatile uint32_t nof) {
 void InitGPIO(void)
 {
 	// Enable Clock to PORTB and PORTD
-	SIM->SCGC5 |= ((SIM_SCGC5_PORTB_MASK) | (SIM_SCGC5_PORTD_MASK));
+	SIM->SCGC5 |= SIM_SCGC5_PORTC_MASK;
 	// Configure MUX settings to make all 3 pins GPIO
-	PORTB->PCR[RED_LED] &= ~PORT_PCR_MUX_MASK; // 0x700u = 0111 0000 0000 
-	PORTB->PCR[RED_LED] |= PORT_PCR_MUX(1); // x << 8 
-	PORTB->PCR[GREEN_LED] &= ~PORT_PCR_MUX_MASK;
-	PORTB->PCR[GREEN_LED] |= PORT_PCR_MUX(1);
-	PORTD->PCR[BLUE_LED] &= ~PORT_PCR_MUX_MASK;
-	PORTD->PCR[BLUE_LED] |= PORT_PCR_MUX(1);
+	PORTC->PCR[RED_LED] &= ~PORT_PCR_MUX_MASK; // 0x700u = 0111 0000 0000 
+	PORTC->PCR[RED_LED] |= PORT_PCR_MUX(1); // x << 8 
+	PORTC->PCR[GREEN_LED] &= ~PORT_PCR_MUX_MASK;
+	PORTC->PCR[GREEN_LED] |= PORT_PCR_MUX(1);
+	PORTC->PCR[BLUE_LED] &= ~PORT_PCR_MUX_MASK;
+	PORTC->PCR[BLUE_LED] |= PORT_PCR_MUX(1);
+	PORTC->PCR[WHITE_LED] &= ~PORT_PCR_MUX_MASK;
+	PORTC->PCR[WHITE_LED] |= PORT_PCR_MUX(1);
 	// Set Data Direction Registers for PortB and PortD
-	PTB->PDDR |= (MASK(RED_LED) | MASK(GREEN_LED));
-	PTD->PDDR |= MASK(BLUE_LED);
+	PTC->PDDR |= (MASK(RED_LED) | MASK(GREEN_LED) | MASK(WHITE_LED) | MASK(BLUE_LED));
 }
 
 void OffLed(colour_t colour)
@@ -62,28 +65,36 @@ void OffLed(colour_t colour)
 		case BLUE:
 			PTD->PSOR |= MASK(BLUE_LED);
 			break;
+		case WHITE:
+			PTD->PSOR |= MASK(WHITE_LED);
+			break;
 		}
 }
 
 void OnLed(colour_t colour) { 
 	switch (colour){
 		case RED: 
-			PTB->PCOR |= MASK(RED_LED);
+			PTC->PSOR |= MASK(RED_LED);
 			break;
 		case GREEN: 
-			PTB->PCOR |= MASK(GREEN_LED);
+			PTC->PSOR |= MASK(GREEN_LED);
 			break;
 		case BLUE:
-			PTD->PCOR |= MASK(BLUE_LED);
+			PTC->PSOR |= MASK(BLUE_LED);
+			break;
+		case WHITE:
+			PTC->PSOR |= MASK(WHITE_LED);
 			break;
 		}
 }
 
 void OffRGB()
 {
-		PTB->PSOR |= MASK(RED_LED);
-		PTB->PSOR |= MASK(GREEN_LED);
-		PTD->PSOR |= MASK(BLUE_LED);
+		PTC->PCOR |= MASK(RED_LED);
+		PTC->PCOR |= MASK(GREEN_LED);
+		PTC->PCOR |= MASK(BLUE_LED);
+		PTC->PCOR |= MASK(WHITE_LED);
+		
 }
 
 /*----------------------------------------------------------------------------
@@ -93,21 +104,6 @@ void app_main (void *argument) {
  
   // ...
   for (;;) {}
-}
-
-void red_led_thread (void *argument) {
-  for (;;) {
-		osMutexAcquire(myMutex, osWaitForever); 
-		
-		OnLed(RED);
-		osDelay(1000); 
-		// delay(0x80000);
-		OffLed(RED);
-		osDelay(1000); 
-		// delay(0x80000);
-		
-		osMutexRelease(myMutex);
-	}
 }
 
 void green_led_thread (void *argument) {
@@ -138,7 +134,7 @@ volatile uint8_t buf[16];
  typedef struct {
 	uint8_t start;
   int16_t forward;
-  int16_t backward; 
+  int16_t right; 
 	uint8_t end;
 } serialData;
 
@@ -159,12 +155,13 @@ void InitUART1(uint32_t baudRate) {
 
   // Set PTE1 (UART1 RX) and PTE0 (UART1 TX) to alternative function ALT 3 (UART)
   PORTE->PCR[1] = (PORTE->PCR[1] & ~PORT_PCR_MUX_MASK) | PORT_PCR_MUX(3); // RX
-  PORTE->PCR[2] = (PORTE->PCR[0] & ~PORT_PCR_MUX_MASK) | PORT_PCR_MUX(3); // TX
+  PORTE->PCR[0] = (PORTE->PCR[0] & ~PORT_PCR_MUX_MASK) | PORT_PCR_MUX(3); // TX
   
   //Disable TX and RX before configuration
   UART1->C2 &= ~(UART_C2_RE_MASK | UART_C2_TE_MASK); 
   
   // Configure UART1: Set baud rate, word length, parity, etc.
+	
   uint32_t sbr = (UART_CLK / (16 * baudRate)); // Baud rate calculation
   UART1->BDH = UART_BDH_SBR(sbr >> 8); // Set baud rate
   UART1->BDL = UART_BDL_SBR(sbr);
@@ -173,15 +170,16 @@ void InitUART1(uint32_t baudRate) {
   UART1->C1 = 0; // Normal Mode: start + 8 data (lsb first) + stop, parity disabled
   UART1->S2 = 0; // Reset flags
   UART1->C3 = 0; // Parity interrupt disabled
+	
+	
 
 	//Enable TX RX
   UART1->C2 |= (UART_C2_RE_MASK | UART_C2_TE_MASK); 
       
-  NVIC_SetPriority(UART1_IRQn, 128); 
-  NVIC_ClearPendingIRQ(UART1_IRQn); 
-  NVIC_EnableIRQ(UART1_IRQn);
-
-  UART1->C2 |= UART_C2_RIE_MASK; //Enable RX interrupt
+  //NVIC_SetPriority(UART1_IRQn, 128); 
+  //NVIC_ClearPendingIRQ(UART1_IRQn); 
+  //NVIC_EnableIRQ(UART1_IRQn);
+	//UART1->C2 |= UART_C2_RIE_MASK; 
 }
 
 void UART1_IRQHandler(void) {
@@ -205,19 +203,46 @@ void UART1_IRQHandler(void) {
 }
 
 void parser_thread(void *argument) {
-    uint8_t received_buf[16];
+    serialData recv_packet;
 
     while (1) {
-        osStatus_t status = osMessageQueueGet(tParserMessageQueue, &received_buf, NULL, osWaitForever);
+        osStatus_t status = osMessageQueueGet(tParserMessageQueue, &recv_packet, NULL, osWaitForever);
         if (status == osOK) {
-            printf("Received Packet: ");
-            for (int i = 0; i < 5; i++) {
-                printf("%02X ", received_buf[i]);
-            }
-            printf("\n");
+					if (recv_packet.forward > 0) {
+						OnLed(GREEN);
+					} else if (recv_packet.forward < 0) {
+						OnLed(BLUE);
+					}
+					if (recv_packet.right > 0) {
+						OnLed(WHITE);
+					} else if (recv_packet.right < 0) {
+						OnLed(RED);
+					}
         }
+				osDelay(1000);
+				OffRGB();
     }
 }
+
+uint8_t UART1_Receive_Poll(void) {
+	// wait until receive data register is full
+	while (!(UART1->S1 & UART_S1_RDRF_MASK)); // poll until receive register is full
+	return UART1->D;
+}
+
+void decode_packet(serialData* recv_packet) {
+	if (recv_packet -> forward > 0) {
+		OnLed(GREEN);
+	} else if (recv_packet -> forward < 0) {
+		OnLed(BLUE);
+	}
+	if (recv_packet -> right > 0) {
+		OnLed(WHITE);
+	} else if (recv_packet -> right < 0) {
+		OnLed(RED);
+	}
+}
+
 
 /*----------------------------------------------------------------------------
  * MAIN
@@ -226,17 +251,26 @@ void parser_thread(void *argument) {
 int main (void) {
   // System Initialization
   SystemCoreClockUpdate();
-  //InitGPIO();
+  InitGPIO();
 	InitUART1(9600);
-	Init_Serial_MsgQueue();
+	//Init_Serial_MsgQueue();
 	OffRGB();	
  
-  osKernelInitialize();                 // Initialize CMSIS-RTOS
-  myMutex = osMutexNew(NULL);
+  //osKernelInitialize();                 // Initialize CMSIS-RTOS
+  //myMutex = osMutexNew(NULL);
 	//osThreadNew(app_main, NULL, NULL);    // Create application main thread
 	//osThreadNew(red_led_thread, NULL, NULL); 
 	//osThreadNew(green_led_thread, NULL, NULL); 
-	osThreadNew(parser_thread, NULL, NULL); 
-  osKernelStart();                      // Start thread execution
-  for (;;) {}
+	//osThreadNew(parser_thread, NULL, NULL); 
+  //osKernelStart();                      // Start thread execution
+	serialData packet;
+	
+  for (;;) {
+		uint8_t *ptr = (uint8_t *)&packet;  // Pointer to struct memory
+    for (size_t i = 0; i < PACKET_SIZE; i++) {
+        ptr[i] = UART1_Receive_Poll();  // Receive one byte at a time
+    }
+		decode_packet(&packet);
+		delay(100);
+	}
 }
