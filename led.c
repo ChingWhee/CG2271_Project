@@ -2,6 +2,23 @@
 #include "MKL25Z4.h"
 #include "cmsis_os2.h"
 
+// Green LEDs -- PTC0 - 7, 10 - 11
+#define GREEN_LED_0 0
+#define GREEN_LED_1 1
+#define GREEN_LED_2 2
+#define GREEN_LED_3 3
+#define GREEN_LED_4 4
+#define GREEN_LED_5 5
+#define GREEN_LED_6 6
+#define GREEN_LED_7 7
+#define GREEN_LED_8 10
+#define GREEN_LED_9 11
+
+#define MASK(x) (1 << (x))
+
+int moving_flag = 0;
+#define LED_DELAY 200
+	
 void InitGreenLed(void)
 {
 	// Enable Clock to PORTC
@@ -59,12 +76,18 @@ void green_led_thread (void *argument) {
   OffAllGreenLed();
 	
   for (;;) {
-		OffAllGreenLed();
-		OnGreenLed(count);
-		// If count is 8, skip to 10
-		// If count is 12, reset to 0
-		count++;
-		count = (count == 8) ? 10 : ((count == 12) ? 0 : count);
-		osDelay(500);
+		if (moving_flag) {
+			OffAllGreenLed();
+			OnGreenLed(count);
+
+			count++;
+			// If count is 8, skip to 10
+			// If count is 12, reset to 0
+			count = (count == 8) ? 10 : ((count == 12) ? 0 : count);
+			osDelay(LED_DELAY);
+		} else {
+			OnAllGreenLed();
+			osDelay(LED_DELAY);
+		}
 	}
 }
