@@ -10,7 +10,7 @@
 #include "audio.h"
  
 osMutexId_t myMutex;
-volatile int moving_flag;
+volatile int isMoving;
 
 /*----------------------------------------------------------------------------
  * Application main thread

@@ -1,6 +1,6 @@
 #include "green_led.h"
 
-extern volatile int moving_flag;
+extern volatile int isMoving;
 	
 void InitLed(void)
 {

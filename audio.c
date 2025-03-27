@@ -1,6 +1,6 @@
 #include "audio.h"
 
-extern volatile int moving_flag;
+extern volatile int isMoving;
 
 int melody1[] = {
   NOTE_A4, REST, NOTE_B4, REST, NOTE_C5, REST, NOTE_A4, REST,
@@ -143,9 +143,9 @@ void audio_thread(void *argument) {
 	int prev_moving_flag = 0;
 	
   for (;;) {
-		if (moving_flag) {			
+		if (isMoving) {			
 			// Reset song to beginning if flag changes or end of song reached
-			if (prev_moving_flag != moving_flag || melody1_note == melody1_length) {
+			if (prev_moving_flag != isMoving || melody1_note == melody1_length) {
 				melody1_note = 0;
 			}
 			
@@ -159,7 +159,7 @@ void audio_thread(void *argument) {
 			melody1_note++;		
 		} else {
 			// Reset song to beginning if flag changes or end of song reached
-			if (prev_moving_flag != moving_flag || melody2_note == melody2_length) {
+			if (prev_moving_flag != isMoving || melody2_note == melody2_length) {
 				melody2_note = 0;
 			}
 			
@@ -173,6 +173,6 @@ void audio_thread(void *argument) {
 			melody2_note++;			
 		}
 		
-		prev_moving_flag = moving_flag;
+		prev_moving_flag = isMoving;
 	}
 }

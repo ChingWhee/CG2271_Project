@@ -16,6 +16,8 @@
 #define GREEN_LED_8 // Port C Pin 10
 #define GREEN_LED_9 // Port C Pin 11
 
+#define RED_LED 8
+
 #define MASK(x) (1 << (x))
 
 #define LED_DELAY 200
