@@ -7,8 +7,10 @@
 #include "cmsis_os2.h"
 
 #include "green_led.h"
+#include "audio.h"
  
 osMutexId_t myMutex;
+volatile int moving_flag;
 
 /*----------------------------------------------------------------------------
  * Application main thread
@@ -20,6 +22,7 @@ int main (void) {
   osKernelInitialize();                 // Initialize CMSIS-RTOS
   myMutex = osMutexNew(NULL);
 	osThreadNew(green_led_thread, NULL, NULL); 
+	osThreadNew(audio_thread, NULL, NULL); 
   osKernelStart();                      // Start thread execution
   for (;;) {}
 }

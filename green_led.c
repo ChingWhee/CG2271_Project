@@ -1,6 +1,4 @@
 #include "green_led.h"
-#include "MKL25Z4.h"
-#include "cmsis_os2.h"
 
 // Green LEDs -- PTC0 - 7, 10 - 11
 #define GREEN_LED_0 0
@@ -20,6 +18,7 @@
 
 int isMoving = 0;
 #define LED_DELAY 200
+extern volatile int moving_flag;
 	
 void InitLed(void)
 {
