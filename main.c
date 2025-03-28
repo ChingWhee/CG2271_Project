@@ -10,7 +10,8 @@
 #include "audio.h"
  
 osMutexId_t myMutex;
-volatile int isMoving;
+volatile int isMoving = 1;
+volatile int isFinish = 0;
 
 /*----------------------------------------------------------------------------
  * Application main thread
@@ -22,6 +23,7 @@ int main (void) {
   osKernelInitialize();                 // Initialize CMSIS-RTOS
   myMutex = osMutexNew(NULL);
 	osThreadNew(green_led_thread, NULL, NULL); 
+	osThreadNew(red_led_thread, NULL, NULL); 
 	osThreadNew(audio_thread, NULL, NULL); 
   osKernelStart();                      // Start thread execution
   for (;;) {}

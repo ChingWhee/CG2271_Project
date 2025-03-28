@@ -1,93 +1,61 @@
 #include "audio.h"
 
-extern volatile int isMoving;
+extern volatile int isFinish;
 
 int melody1[] = {
-  NOTE_A4, REST, NOTE_B4, REST, NOTE_C5, REST, NOTE_A4, REST,
-  NOTE_D5, REST, NOTE_E5, REST, NOTE_D5, REST,
-
-  NOTE_G4, NOTE_A4, NOTE_C5, NOTE_A4, NOTE_E5, NOTE_E5, REST,
-  NOTE_D5, REST,
-
-  NOTE_G4, NOTE_A4, NOTE_C5, NOTE_A4, NOTE_D5, NOTE_D5, REST,
-  NOTE_C5, REST, NOTE_B4, NOTE_A4, REST,
-
-  NOTE_G4, NOTE_A4, NOTE_C5, NOTE_A4, NOTE_C5, NOTE_D5, REST,
-  NOTE_B4, NOTE_A4, NOTE_G4, REST, NOTE_G4, REST, NOTE_D5, REST, NOTE_C5, REST,
-
-  NOTE_G4, NOTE_A4, NOTE_C5, NOTE_A4, NOTE_E5, NOTE_E5, REST,
-  NOTE_D5, REST,
-
-  NOTE_G4, NOTE_A4, NOTE_C5, NOTE_A4, NOTE_G5, NOTE_B4, REST,
-  NOTE_C5, REST, NOTE_B4, NOTE_A4, REST,
-
-  NOTE_G4, NOTE_A4, NOTE_C5, NOTE_A4, NOTE_C5, NOTE_D5, REST,
-  NOTE_B4, NOTE_A4, NOTE_G4, REST, NOTE_G4, REST, NOTE_D5, REST, NOTE_C5, REST,
-
-  NOTE_C5, REST, NOTE_D5, REST, NOTE_G4, REST, NOTE_D5, REST, NOTE_E5, REST,
-  NOTE_G5, NOTE_F5, NOTE_E5, REST
+  NOTE_AS4, REST, NOTE_AS4, REST, NOTE_AS4, REST, NOTE_AS4, REST,
+  NOTE_AS4, NOTE_B4, NOTE_DS5,
+  NOTE_AS4, REST, NOTE_AS4, REST,
+  NOTE_AS4, NOTE_B4, NOTE_DS5,
+  NOTE_AS4, REST, NOTE_AS4, REST,
+  NOTE_AS4, NOTE_B4, NOTE_DS5,
+  NOTE_AS4, REST, NOTE_AS4, REST,
+  NOTE_AS4, NOTE_B4, NOTE_DS5,
+  NOTE_F5, REST, NOTE_F5, REST,
+  NOTE_GS5, NOTE_FS5, NOTE_F5,
+  NOTE_AS4, REST, NOTE_AS4, REST,
+  NOTE_GS5, NOTE_FS5, NOTE_F5,
+  NOTE_AS4, REST, NOTE_AS4, REST,
+  NOTE_AS4, NOTE_B4, NOTE_DS5,
+  NOTE_AS4, REST, NOTE_AS4, REST,
+  NOTE_AS4, NOTE_B4, NOTE_DS5,
+  NOTE_AS4, REST, NOTE_AS4, REST,
+  REST
 };
 
 int noteDurations1[] = {
-  8, 8, 8, 8, 8, 8, 8, 4,
-  8, 8, 8, 8, 2, 2,
-
-  8, 8, 8, 8, 2, 8, 8,
-  2, 8,
-
-  8, 8, 8, 8, 2, 8, 8,
-  4, 8, 8, 8, 8,
-
-  8, 8, 8, 8, 2, 8, 8,
-  2, 8, 4, 8, 8, 8, 8, 8, 1, 4,
-
-  8, 8, 8, 8, 2, 8, 8,
-  2, 8,
-
-  8, 8, 8, 8, 2, 8, 8,
-  2, 8, 8, 8, 8,
-
-  8, 8, 8, 8, 2, 8, 8,
-  4, 8, 3, 8, 8, 8, 8, 8, 1, 4,
-
-  2, 6, 2, 6, 4, 4, 2, 6, 2, 3,
-  8, 8, 8, 8
+  4, 4, 4, 4, 4, 4, 4, 4,
+  3, 3, 4,
+  4, 4, 4, 4,
+  3, 3, 4,
+  4, 4, 4, 4,
+  3, 3, 4,
+  4, 4, 4, 4,
+  3, 3, 4,
+  4, 4, 4, 4,
+  3, 3, 4,
+  4, 4, 4, 4,
+  3, 3, 4,
+  4, 4, 4, 4,
+  3, 3, 4,
+  4, 4, 4, 4,
+  3, 3, 4,
+  4, 4, 4, 4,
+  1
 };
 
 int melody2[] = {
-  NOTE_E4, NOTE_F4, NOTE_G4, NOTE_E5, NOTE_C5, NOTE_D5, NOTE_C5, NOTE_C5, NOTE_B4, NOTE_B4, NOTE_D4,
-  NOTE_E4, NOTE_F4, NOTE_D5, NOTE_B4, NOTE_C5, NOTE_B4, NOTE_A4, NOTE_G4, NOTE_G4, NOTE_E4, NOTE_F4, 
-  NOTE_G4, NOTE_C5, NOTE_D5, NOTE_E5, NOTE_D5, NOTE_C5, NOTE_A4, NOTE_D5, NOTE_E5, NOTE_F5, NOTE_E5, 
-  NOTE_D5, NOTE_G4, NOTE_F5, NOTE_E5, NOTE_D5, NOTE_C5, NOTE_C5, REST, NOTE_C5, REST, NOTE_C5, NOTE_E5, 
-  NOTE_C5, NOTE_D5, REST, NOTE_D5, NOTE_D5, NOTE_D5, REST, NOTE_D5, NOTE_F5, NOTE_D5, NOTE_E5, REST, NOTE_E5, 
-  NOTE_E5, NOTE_E5, REST, NOTE_E5, NOTE_G5, NOTE_E5, NOTE_F5, REST, NOTE_F5, NOTE_F5, NOTE_E5, NOTE_D5, NOTE_G4, 
-  NOTE_B4, NOTE_C5, NOTE_C5, REST
+  NOTE_E5, NOTE_D5, NOTE_FS4, NOTE_GS4, 
+  NOTE_CS5, NOTE_B4, NOTE_D4, NOTE_E4, 
+  NOTE_B4, NOTE_A4, NOTE_CS4, NOTE_E4,
+  NOTE_A4, REST
 };
 
 int noteDurations2[] = {
-  8, 8, 8, 8, 8, 8, 8, 4,
-  8, 8, 8, 8, 2, 2,
-
-  8, 8, 8, 8, 2, 8, 8,
-  2, 8,
-
-  8, 8, 8, 8, 2, 8, 8,
-  4, 8, 8, 8, 8,
-
-  8, 8, 8, 8, 2, 8, 8,
-  2, 8, 4, 8, 8, 8, 8, 8, 1, 4,
-
-  8, 8, 8, 8, 2, 8, 8,
-  2, 8,
-
-  8, 8, 8, 8, 2, 8, 8,
-  2, 8, 8, 8, 8,
-
-  8, 8, 8, 8, 2, 8, 8,
-  4, 8, 3, 8, 8, 8, 8, 8, 1, 4,
-
-  2, 6, 2, 6, 4, 4, 2, 6, 2, 3,
-  8, 8, 8, 8
+  8, 8, 4, 4,
+  8, 8, 4, 4,
+  8, 8, 4, 4,
+  1, 8
 };
 
 void InitAudio(void) {
@@ -132,24 +100,24 @@ void playNote(uint16_t frequency)
 }
 
 void audio_thread(void *argument) {
-	// Melody 1 - Moving; Melody 2 - Stationary
 	int melody1_note = 0;
 	int melody2_note = 0;
 	
 	// Length - 1 to consider zero indexing of arrays
-	int melody1_length = sizeof(melody1)/sizeof(melody1[0]) - 1;
-	int melody2_length = sizeof(melody2)/sizeof(melody2[0]) - 1;
+	int melody1_length = sizeof(melody1)/sizeof(melody1[0]);
+	int melody2_length = sizeof(melody2)/sizeof(melody2[0]);
 	
-	int prev_moving_flag = 0;
+	InitAudio();
+	int prev_is_finish = 0;
 	
   for (;;) {
-		if (isMoving) {			
+		if (isFinish) {			
 			// Reset song to beginning if flag changes or end of song reached
-			if (prev_moving_flag != isMoving || melody1_note == melody1_length) {
+			if (melody1_note >= melody1_length) {
 				melody1_note = 0;
 			}
 			
-			int noteDuration = BEAT_LENGTH * noteDurations1[melody1_note];   // Calculate note duration
+			int noteDuration = 1000 / noteDurations1[melody1_note];   // Calculate note duration
 			playNote(melody1[melody1_note]);
 			osDelay(noteDuration);
 			
@@ -159,12 +127,12 @@ void audio_thread(void *argument) {
 			melody1_note++;		
 		} else {
 			// Reset song to beginning if flag changes or end of song reached
-			if (prev_moving_flag != isMoving || melody2_note == melody2_length) {
+			if (melody2_note >= melody2_length) {
 				melody2_note = 0;
 			}
 			
-			int noteDuration = BEAT_LENGTH * noteDurations1[melody1_note];   // Calculate note duration
-			playNote(melody1[melody1_note]);
+			int noteDuration = 500 / noteDurations2[melody2_note];   // Calculate note duration
+			playNote(melody2[melody2_note]);
 			osDelay(noteDuration);
 			
 			playNote(0);
@@ -173,6 +141,6 @@ void audio_thread(void *argument) {
 			melody2_note++;			
 		}
 		
-		prev_moving_flag = isMoving;
+		prev_is_finish = isFinish;
 	}
 }
