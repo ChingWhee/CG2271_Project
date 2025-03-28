@@ -8,6 +8,8 @@
 
 #define MASK(x) (1 << (x))
 
+extern int isMoving;
+
 /*----------------------------------------------------------------------------
  * PWM Pins for Motor Driver
  *---------------------------------------------------------------------------*/
@@ -29,17 +31,17 @@
  *---------------------------------------------------------------------------*/
 
 void initMotor(void);
-void move_right_forward_wheel(uint16_t speed, uint8_t direction);
-void move_right_backward_wheel(uint16_t speed, uint8_t direction);
-void move_left_forward_wheel(uint16_t speed, uint8_t direction);
-void move_left_backward_wheel(uint16_t speed, uint8_t direction);
+void move_right_forward_wheel(int speed, int direction);
+void move_right_backward_wheel(int speed, int direction);
+void move_left_forward_wheel(int speed, int direction);
+void move_left_backward_wheel(int speed, int direction);
 
-void move_forward_or_backward(uint16_t speed, uint8_t direction);
+void move_forward_or_backward(int speed, int direction);
 
-void turn_right_on_spot(uint16_t speed);
-void turn_left_on_spot(uint16_t speed);
-void turn_left_smooth(uint16_t base_speed, uint16_t turn_factor, uint8_t direction);
-void turn_right_smooth(uint16_t base_speed, uint16_t turn_factor, uint8_t direction);
+void turn_right_on_spot(int speed);
+void turn_left_on_spot(int speed);
+void turn_left_smooth(int base_speed, int turn_factor, int direction);
+void turn_right_smooth(int base_speed, int turn_factor, int direction);
 void stop_car(void);
 
 void move(int base_speed, int turn_factor);
