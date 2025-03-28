@@ -30,22 +30,12 @@ void InitLed(void)
 
 void OffAllGreenLed()
 {
-	for (int i = 0; i < 8; i++) {
-		PTC->PCOR |= MASK(i);
-	}
-	for (int i = 10; i < 12; i++) {
-		PTC->PCOR |= MASK(i);
-	}
+	PTC->PCOR |= 0b110011111111;
 }
 
 void OnAllGreenLed() 
 {
-	for (int i = 0; i < 8; i++) {
-		PTC->PSOR |= MASK(i);
-	}
-	for (int i = 10; i < 12; i++) {
-		PTC->PSOR |= MASK(i);
-	}
+	PTC->PSOR |= 0b110011111111;
 }
 
 void OnGreenLed(int led)

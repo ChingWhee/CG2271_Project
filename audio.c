@@ -110,13 +110,13 @@ void audio_thread(void *argument) {
 	InitAudio();
 	
   for (;;) {
-		if (isFinish) {			
+		if (!isFinish) {			
 			// Reset song to beginning if flag changes or end of song reached
 			if (melody1_note >= melody1_length) {
 				melody1_note = 0;
 			}
 			
-			int noteDuration = 1000 / noteDurations1[melody1_note];   // Calculate note duration
+			int noteDuration = 500 / noteDurations1[melody1_note];   // Calculate note duration
 			playNote(melody1[melody1_note]);
 			osDelay(noteDuration);
 			
