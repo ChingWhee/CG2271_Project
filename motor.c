@@ -15,7 +15,6 @@ void initMotor(void) {
 	PORTD->PCR[RIGHT_FRONT_PWM_BWD] &= ~PORT_PCR_MUX_MASK;
   PORTD->PCR[RIGHT_FRONT_PWM_BWD] |= PORT_PCR_MUX(4);
 	
-	//PTD->PDDR |= (MASK(0) | MASK(1));
 	
 	PORTD->PCR[RIGHT_BACK_PWM_FWD] &= ~PORT_PCR_MUX_MASK;
   PORTD->PCR[RIGHT_BACK_PWM_FWD] |= PORT_PCR_MUX(4);
@@ -23,11 +22,13 @@ void initMotor(void) {
 	PORTD->PCR[RIGHT_BACK_PWM_BWD] &= ~PORT_PCR_MUX_MASK;
   PORTD->PCR[RIGHT_BACK_PWM_BWD] |= PORT_PCR_MUX(4);
 	
+	
 	PORTE->PCR[LEFT_FRONT_PWM_FWD] &= ~PORT_PCR_MUX_MASK;
   PORTE->PCR[LEFT_FRONT_PWM_FWD] |= PORT_PCR_MUX(3);
 	
 	PORTE->PCR[LEFT_FRONT_PWM_BWD] &= ~PORT_PCR_MUX_MASK;
   PORTE->PCR[LEFT_FRONT_PWM_BWD] |= PORT_PCR_MUX(3);
+	
 	
 	PORTE->PCR[LEFT_BACK_PWM_FWD] &= ~PORT_PCR_MUX_MASK;
   PORTE->PCR[LEFT_BACK_PWM_FWD] |= PORT_PCR_MUX(3);
@@ -40,6 +41,7 @@ void initMotor(void) {
   SIM->SOPT2 |= SIM_SOPT2_TPMSRC(1); // MCGFLLCLK or MCGPLLCLK/2
 	
 	// Set Modulo Value 48000000 / 128 = 375000 / 50Hz = 7500
+	TPM0->MOD = PWM_PERIOD;
   TPM1->MOD = PWM_PERIOD;
 	
 	/* Edge-Aligned PWM */
@@ -97,31 +99,31 @@ void move_right_forward_wheel(uint16_t speed, uint8_t direction) {
 
 void move_right_backward_wheel(uint16_t speed, uint8_t direction) {
 	if (direction) {
-		TPM0_C4V = speed;
-		TPM0_C5V = 0;
-	} else {
 		TPM0_C4V = 0;
 		TPM0_C5V = speed;
+	} else {
+		TPM0_C4V = speed;
+		TPM0_C5V = 0;
 	}
 }
 
 void move_left_forward_wheel(uint16_t speed, uint8_t direction) {
 	if (direction) {
-		TPM1_C0V = speed;
-		TPM1_C1V = 0;
-	} else {
 		TPM1_C0V = 0;
 		TPM1_C1V = speed;
+	} else {
+		TPM1_C0V = speed;
+		TPM1_C1V = 0;
 	}
 }
 
 void move_left_backward_wheel(uint16_t speed, uint8_t direction) {
 	if (direction) {
-		TPM0_C2V = speed;
-		TPM0_C3V = 0;
-	} else {
 		TPM0_C2V = 0;
 		TPM0_C3V = speed;
+	} else {
+		TPM0_C2V = speed;
+		TPM0_C3V = 0;
 	}
 }
 
@@ -133,7 +135,7 @@ void move_forward_or_backward(uint16_t speed, uint8_t direction) {
 }
 
 void turn_right_on_spot(uint16_t speed) {
-	move_right_forward_wheel(0, 1);
+	move_right_forward_wheel(speed, 0);
 	move_right_backward_wheel(speed, 0);
 	move_left_forward_wheel(speed, 1);
 	move_left_backward_wheel(speed, 1);
@@ -143,7 +145,7 @@ void turn_left_on_spot(uint16_t speed) {
 	move_right_forward_wheel(speed, 1);
 	move_right_backward_wheel(speed, 1);
 	move_left_forward_wheel(speed, 0);
-	move_left_backward_wheel(0, 1);
+	move_left_backward_wheel(speed, 0);
 }
 
 void turn_left_smooth(uint16_t base_speed, uint16_t turn_factor, uint8_t direction) {

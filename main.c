@@ -7,15 +7,52 @@
 #include "cmsis_os2.h"
 
 #include "motor.h"
+#include "buffer.h"
+
+int forward_speed = 0;
+int left_speed = 0;
+
+BUFFER b;
+
+/*----------------------------------------------------------------------------
+ * ESP32 Packet Parsing Thread
+ *---------------------------------------------------------------------------*/
+void parse_command_thread(){
+	for(;;){
+		decodeMessage(&b, &forward_speed, &left_speed);
+	}
+}
+
+/*----------------------------------------------------------------------------
+ * Motor Control Thread
+ *---------------------------------------------------------------------------*/
+void motor_thread (void *argument) {
+  for (;;) {
+		move(forward_speed, left_speed);
+	}
+}
  
 /*----------------------------------------------------------------------------
  * Application main thread
  *---------------------------------------------------------------------------*/
 void app_main (void *argument) {
  
-	move_right_forward_wheel(7500, 0);
+	
   // ...
   for (;;) {
+		//turn_right_smooth(7500, 0, 1);
+		//turn_right_smooth(7500, 0, 0);
+		
+		//move(-3000, 0); // forward
+		//osDelay(5000);
+		//move(3000, 0); // backward
+		//osDelay(5000);
+		move(0, 2000); // right
+		//osDelay(5000);
+		//move(-3000, -1000); // left
+		//osDelay(5000);
+		
+		//move_right_backward_wheel(7500, 0);
 		
 		//PTD->PCOR = MASK(0);
 		//PTD->PSOR = MASK(1);
@@ -40,6 +77,10 @@ int main (void) {
  
   osKernelInitialize();                 // Initialize CMSIS-RTOS
   osThreadNew(app_main, NULL, NULL);    // Create application main thread
-  osKernelStart();                      // Start thread execution
+  
+	//osThreadNew(motor_thread, NULL, NULL);
+	//osThreadNew(parse_command_thread, NULL, NULL);
+	
+	osKernelStart();                      // Start thread execution
   for (;;) {}
 }

@@ -397,6 +397,16 @@
               <FileType>5</FileType>
               <FilePath>.\motor.h</FilePath>
             </File>
+            <File>
+              <FileName>buffer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\buffer.c</FilePath>
+            </File>
+            <File>
+              <FileName>buffer.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\buffer.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
