@@ -120,12 +120,6 @@ void parser_thread(void *argument) {
 }
 **/
 
-uint8_t UART1_Receive_Poll(void) {
-	// wait until receive data register is full
-	while (!(UART1->S1 & UART_S1_RDRF_MASK)); // poll until receive register is full
-	return UART1->D;
-}
-
 void decode_packet(serialData* recv_packet) {
 	if (recv_packet -> forward > 0) {
 		OnLed(GREEN);
@@ -173,8 +167,8 @@ int main (void) {
   // System Initialization
   SystemCoreClockUpdate();
   InitGPIO();
-	tParserMessageQueue = Init_Serial_MsgQueue();
-	InitUART1(9600);
+	//tParserMessageQueue = Init_Serial_MsgQueue();
+	Init_UART2(BAUD_RATE);
 	//Init_Serial_MsgQueue();
 	OffRGB();	
  
@@ -186,13 +180,26 @@ int main (void) {
 	//osThreadNew(parser_thread, NULL, NULL); 
   //osKernelStart();                      // Start thread execution
 	serialData packet;
+	uint8_t *ptr = (uint8_t *)&packet;  // Pointer to struct memory
+	size_t index = 0;
 	
   for (;;) {
-		uint8_t *ptr = (uint8_t *)&packet;  // Pointer to struct memory
-    for (size_t i = 0; i < PACKET_SIZE; i++) {
-        ptr[i] = UART1_Receive_Poll();  // Receive one byte at a time
-    }
-		decode_packet(&packet);
-		delay(100);
+		uint8_t byte = Q_Dequeue(&RxQ);  // Receive one byte at a time
+		if (byte != 0x00) {
+			if(byte == 0xFE){
+				index = 0;
+				ptr[index++] = byte;
+			} else if(index >= (PACKET_SIZE - 1) && byte == 0xFF) {
+				ptr[index] = byte;
+				decode_packet(&packet);
+				delay(100);
+				index = 0;
+			} else if (index > 0 && index < PACKET_SIZE) {
+				ptr[index++] = byte;
+			} else { //invalid message, reset it
+				index = -1;
+			}
+	}
+		
 	}
 }
