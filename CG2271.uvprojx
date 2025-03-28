@@ -401,6 +401,25 @@
               <FileName>motor.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\motor.c</FilePath>
+            <File>
+              <FileName>green_led.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\green_led.h</FilePath>
+            </File>
+            <File>
+              <FileName>green_led.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\green_led.c</FilePath>
+            </File>
+            <File>
+              <FileName>audio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\audio.c</FilePath>
+            </File>
+            <File>
+              <FileName>audio.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\audio.h</FilePath>
             </File>
           </Files>
         </Group>
