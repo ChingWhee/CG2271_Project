@@ -1,6 +1,6 @@
 #include "audio.h"
 
-extern volatile int isFinish;
+extern int isFinish;
 
 int melody1[] = {
   NOTE_AS4, REST, NOTE_AS4, REST, NOTE_AS4, REST, NOTE_AS4, REST,
@@ -108,7 +108,6 @@ void audio_thread(void *argument) {
 	int melody2_length = sizeof(melody2)/sizeof(melody2[0]);
 	
 	InitAudio();
-	int prev_is_finish = 0;
 	
   for (;;) {
 		if (isFinish) {			
@@ -140,7 +139,5 @@ void audio_thread(void *argument) {
 			
 			melody2_note++;			
 		}
-		
-		prev_is_finish = isFinish;
 	}
 }
