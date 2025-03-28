@@ -6,6 +6,8 @@
 #include  CMSIS_device_header
 #include "cmsis_os2.h"
 #include "uart.h"
+#include "motor.h"
+#include "buffer.h"
  
 #define RED_LED 12 // PortB Pin 18
 #define GREEN_LED 13 // PortB Pin 19
@@ -96,29 +98,6 @@ void OffRGB()
 		
 }
 
-/**
-void parser_thread(void *argument) {
-    serialData recv_packet;
-
-    while (1) {
-        osStatus_t status = osMessageQueueGet(tParserMessageQueue, &recv_packet, NULL, osWaitForever);
-        if (status == osOK) {
-					if (recv_packet.forward > 0) {
-						OnLed(GREEN);
-					} else if (recv_packet.forward < 0) {
-						OnLed(BLUE);
-					}
-					if (recv_packet.right > 0) {
-						OnLed(WHITE);
-					} else if (recv_packet.right < 0) {
-						OnLed(RED);
-					}
-        }
-				osDelay(1000);
-				OffRGB();
-    }
-}
-**/
 
 void decode_packet(serialData* recv_packet) {
 	if (recv_packet -> forward > 0) {
@@ -160,6 +139,33 @@ void green_led_thread (void *argument) {
 }
 
 /*----------------------------------------------------------------------------
+ * MOTOR
+ *---------------------------------------------------------------------------*/
+int forward_speed = 0;
+int left_speed = 0;
+
+
+/*----------------------------------------------------------------------------
+ * ESP32 Packet Parsing Thread
+ *---------------------------------------------------------------------------*/
+void parse_command_thread(){
+	for(;;){	
+		serialData b;
+		osMessageQueueGet(tParserMessageQueue, &b, NULL, osWaitForever);
+		decodeMessage(&b, &forward_speed, &left_speed);
+	}
+}
+
+/*----------------------------------------------------------------------------
+ * Motor Control Thread
+ *---------------------------------------------------------------------------*/
+void motor_thread (void *argument) {
+  for (;;) {
+		move(forward_speed, left_speed);
+	}
+}
+
+/*----------------------------------------------------------------------------
  * MAIN
  *---------------------------------------------------------------------------*/
 
@@ -167,16 +173,18 @@ int main (void) {
   // System Initialization
   SystemCoreClockUpdate();
   InitGPIO();
+	initMotor();
 	tParserMessageQueue = Init_Serial_MsgQueue();
 	Init_UART2(BAUD_RATE);
 	OffRGB();	
  
   osKernelInitialize();                 // Initialize CMSIS-RTOS
+	osThreadNew(motor_thread, NULL, NULL);
+	osThreadNew(parse_command_thread, NULL, NULL);
   //myMutex = osMutexNew(NULL);
 	//osThreadNew(app_main, NULL, NULL);    // Create application main thread
 	//osThreadNew(red_led_thread, NULL, NULL); 
 	//osThreadNew(green_led_thread, NULL, NULL); 
-	//osThreadNew(parser_thread, NULL, NULL); 
   osKernelStart();                      // Start thread execution
 	
   for (;;) {

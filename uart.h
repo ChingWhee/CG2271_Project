@@ -6,6 +6,7 @@
 #include  CMSIS_device_header
 #include "cmsis_os2.h"
 
+
 #define PACKET_SIZE 4
 
 #define BAUD_RATE 9600
@@ -14,13 +15,6 @@
 #define UART2_INT_PRIO 128
 #define MASK(x) (1 << (x))
 #define Q_SIZE 30
-
-typedef struct {
-	uint8_t start;
-  int8_t forward;
-  int8_t right; 
-	uint8_t end;
-} serialData;
 
 
 typedef struct {

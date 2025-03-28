@@ -11,3 +11,7 @@
 .\objects\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 .\objects\main.o: uart.h
 .\objects\main.o: C:\Users\clair\AppData\Local\Arm\Packs\Keil\Kinetis_KLxx_DFP\1.15.1\Device\Include\MKL25Z4.h
+.\objects\main.o: motor.h
+.\objects\main.o: C:\Users\clair\AppData\Local\Arm\Packs\Keil\Kinetis_KLxx_DFP\1.15.1\Device\Include\MKL25Z4.h
+.\objects\main.o: buffer.h
+.\objects\main.o: C:\Users\clair\AppData\Local\Arm\Packs\Keil\Kinetis_KLxx_DFP\1.15.1\Device\Include\MKL25Z4.h
