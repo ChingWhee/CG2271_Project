@@ -32,14 +32,20 @@ motor.h(47): warning:  #1-D: last line of file ends without a newline
   #endif // MOTOR_H
 buffer.h(18): warning:  #1-D: last line of file ends without a newline
   #endif // BUFFER_H
-main.c(183): warning:  #167-D: argument of type "void (*)()" is incompatible with parameter of type "osThreadFunc_t"
+main.c(186): warning:  #167-D: argument of type "void (*)()" is incompatible with parameter of type "osThreadFunc_t"
   	osThreadNew(parse_command_thread, NULL, NULL);
 main.c(33): warning:  #177-D: function "delay"  was declared but never referenced
   static void delay(volatile uint32_t nof) {
 main.c: 4 warnings, 0 errors
+compiling uart.c...
+buffer.h(18): warning:  #1-D: last line of file ends without a newline
+  #endif // BUFFER_H
+uart.c(149): warning:  #1-D: last line of file ends without a newline
+  }
+uart.c: 2 warnings, 0 errors
 linking...
-Program Size: Code=7896 RO-data=496 RW-data=5136 ZI-data=368  
-".\Objects\CG2271.axf" - 0 Error(s), 4 Warning(s).
+Program Size: Code=7892 RO-data=496 RW-data=5136 ZI-data=264  
+".\Objects\CG2271.axf" - 0 Error(s), 6 Warning(s).
 
 <h2>Software Packages used:</h2>
 

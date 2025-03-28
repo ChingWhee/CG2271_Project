@@ -151,8 +151,10 @@ int left_speed = 0;
 void parse_command_thread(){
 	for(;;){	
 		serialData b;
-		osMessageQueueGet(tParserMessageQueue, &b, NULL, osWaitForever);
-		decodeMessage(&b, &forward_speed, &left_speed);
+		osStatus_t status = osMessageQueueGet(tParserMessageQueue, &b, NULL, osWaitForever);
+		if (status == osOK) {
+			decodeMessage(&b, &forward_speed, &left_speed);
+		}
 	}
 }
 
@@ -174,11 +176,12 @@ int main (void) {
   SystemCoreClockUpdate();
   InitGPIO();
 	initMotor();
-	tParserMessageQueue = Init_Serial_MsgQueue();
+	
 	Init_UART2(BAUD_RATE);
 	OffRGB();	
  
   osKernelInitialize();                 // Initialize CMSIS-RTOS
+	tParserMessageQueue = Init_Serial_MsgQueue();
 	osThreadNew(motor_thread, NULL, NULL);
 	osThreadNew(parse_command_thread, NULL, NULL);
   //myMutex = osMutexNew(NULL);
