@@ -16,19 +16,6 @@
 int isMoving = 1;
 int isFinish = 0;
 
-void decode_packet(serialData* recv_packet) {
-	if (recv_packet -> forward > 0) {
-		OnLed(GREEN);
-	} else if (recv_packet -> forward < 0) {
-		OnLed(BLUE);
-	}
-	if (recv_packet -> right > 0) {
-		OnLed(WHITE);
-	} else if (recv_packet -> right < 0) {
-		OnLed(RED);
-	}
-}
-
 /*----------------------------------------------------------------------------
  * MOTOR
  *---------------------------------------------------------------------------*/
@@ -38,7 +25,7 @@ int left_speed = 0;
 /*----------------------------------------------------------------------------
  * ESP32 Packet Parsing Thread
  *---------------------------------------------------------------------------*/
-void parse_command_thread(){
+void parse_command_thread(void *argument){
 	for(;;){	
 		serialData b;
 		osStatus_t status = osMessageQueueGet(tParserMessageQueue, &b, NULL, osWaitForever);
@@ -64,11 +51,9 @@ void motor_thread (void *argument) {
 int main (void) {
   // System Initialization
   SystemCoreClockUpdate();
-  InitGPIO();
 	initMotor();
 	
 	Init_UART2(BAUD_RATE);
-	OffRGB();	
  
   osKernelInitialize();                 // Initialize CMSIS-RTOS
 	tParserMessageQueue = Init_Serial_MsgQueue();
