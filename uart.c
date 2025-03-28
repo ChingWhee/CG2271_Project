@@ -108,17 +108,29 @@ uint8_t UART2_Receive_Poll(void) {
 
 void UART2_IRQHandler(void) {
     NVIC_ClearPendingIRQ(UART2_IRQn);
-
+		static size_t index = 0;
+		static serialData packet;
     // Receive interrupt handling - receive data register is full =
     if (UART2->S1 & UART_S1_RDRF_MASK) {
-        if (!Q_Full(&RxQ)) {
-            Q_Enqueue(&RxQ, UART2->D);
-        } else {
-            // Error handling: Queue is full
-            // Consider a better approach instead of infinite loop
-            // Example: Set a flag or discard the oldest entry
-        }
-    }
+        uint8_t byte = UART2->D;
+				uint8_t *ptr = (uint8_t *)&packet;  // Pointer to struct memory
+			
+				if(byte == 0xFE){
+					index = 0;
+					ptr[index++] = byte;
+				} else if(index >= (PACKET_SIZE - 1) && byte == 0xFF) {
+					ptr[index] = byte;
+					index = 0;
+					osStatus_t status = osMessageQueuePut(tParserMessageQueue, ptr, 0U, 0U);
+				} else if (index > 0 && index < PACKET_SIZE) {
+					ptr[index++] = byte;
+				} else {
+					index = -1;
+						// Error handling: Queue is full
+						// Consider a better approach instead of infinite loop
+						// Example: Set a flag or discard the oldest entry
+				}
+		}
 
     // Error handling (Overrun, Noise, Framing, Parity errors)
     if (UART2->S1 & (UART_S1_OR_MASK | UART_S1_NF_MASK | UART_S1_FE_MASK | UART_S1_PF_MASK)) {

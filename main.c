@@ -167,39 +167,19 @@ int main (void) {
   // System Initialization
   SystemCoreClockUpdate();
   InitGPIO();
-	//tParserMessageQueue = Init_Serial_MsgQueue();
+	tParserMessageQueue = Init_Serial_MsgQueue();
 	Init_UART2(BAUD_RATE);
-	//Init_Serial_MsgQueue();
 	OffRGB();	
  
-  //osKernelInitialize();                 // Initialize CMSIS-RTOS
+  osKernelInitialize();                 // Initialize CMSIS-RTOS
   //myMutex = osMutexNew(NULL);
 	//osThreadNew(app_main, NULL, NULL);    // Create application main thread
 	//osThreadNew(red_led_thread, NULL, NULL); 
 	//osThreadNew(green_led_thread, NULL, NULL); 
 	//osThreadNew(parser_thread, NULL, NULL); 
-  //osKernelStart();                      // Start thread execution
-	serialData packet;
-	uint8_t *ptr = (uint8_t *)&packet;  // Pointer to struct memory
-	size_t index = 0;
+  osKernelStart();                      // Start thread execution
 	
   for (;;) {
-		uint8_t byte = Q_Dequeue(&RxQ);  // Receive one byte at a time
-		if (byte != 0x00) {
-			if(byte == 0xFE){
-				index = 0;
-				ptr[index++] = byte;
-			} else if(index >= (PACKET_SIZE - 1) && byte == 0xFF) {
-				ptr[index] = byte;
-				decode_packet(&packet);
-				delay(100);
-				index = 0;
-			} else if (index > 0 && index < PACKET_SIZE) {
-				ptr[index++] = byte;
-			} else { //invalid message, reset it
-				index = -1;
-			}
 	}
 		
-	}
 }

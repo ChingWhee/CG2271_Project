@@ -6,7 +6,7 @@
 #include  CMSIS_device_header
 #include "cmsis_os2.h"
 
-#define PACKET_SIZE 6
+#define PACKET_SIZE 4
 
 #define BAUD_RATE 9600
 #define UART_TX_PORTE22 22  // Page 162
@@ -17,8 +17,8 @@
 
 typedef struct {
 	uint8_t start;
-  int16_t forward;
-  int16_t right; 
+  int8_t forward;
+  int8_t right; 
 	uint8_t end;
 } serialData;
 
