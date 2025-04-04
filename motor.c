@@ -88,6 +88,7 @@ void initMotor(void) {
 }
 
 void move_right_forward_wheel(int speed, int direction) {
+	if (speed < 0) speed = 0;
 	if (direction) {
 		TPM0_C0V = 0;
 		TPM0_C1V = speed;
@@ -98,6 +99,7 @@ void move_right_forward_wheel(int speed, int direction) {
 }
 
 void move_right_backward_wheel(int speed, int direction) {
+	if (speed < 0) speed = 0;
 	if (direction) {
 		TPM0_C4V = 0;
 		TPM0_C5V = speed;
@@ -108,6 +110,7 @@ void move_right_backward_wheel(int speed, int direction) {
 }
 
 void move_left_forward_wheel(int speed, int direction) {
+	if (speed < 0) speed = 0;
 	if (direction) {
 		TPM1_C0V = 0;
 		TPM1_C1V = speed;
@@ -118,6 +121,7 @@ void move_left_forward_wheel(int speed, int direction) {
 }
 
 void move_left_backward_wheel(int speed, int direction) {
+	if (speed < 0) speed = 0;
 	if (direction) {
 		TPM0_C2V = 0;
 		TPM0_C3V = speed;
