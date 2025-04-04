@@ -2,8 +2,10 @@
 #include "motor.h"
 
 extern int isMoving;
-
+extern int isFinish;
+	
 void decodeMessage(serialData* b, int* forward_speed, int* left_speed) {
+	
 	int forward_percentage = b->forward;
 	*forward_speed = (forward_percentage / 100.0) * PWM_PERIOD;
 	int left_percentage = b->right;
@@ -12,5 +14,12 @@ void decodeMessage(serialData* b, int* forward_speed, int* left_speed) {
 		isMoving = 0;
 	} else {
 		isMoving = 1;
+	}
+	
+	uint8_t button = b->buttons;
+	if (button == 2) {
+		isFinish = 1;
+	} else if (button == 4) {
+		isFinish = 0;
 	}
 }
