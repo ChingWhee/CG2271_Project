@@ -383,14 +383,9 @@
           <GroupName>Source Group 1</GroupName>
           <Files>
             <File>
-              <FileName>audio.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\audio.h</FilePath>
-            </File>
-            <File>
-              <FileName>buffer.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\buffer.h</FilePath>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\main.c</FilePath>
             </File>
             <File>
               <FileName>green_led.h</FileName>
@@ -398,44 +393,19 @@
               <FilePath>.\green_led.h</FilePath>
             </File>
             <File>
-              <FileName>motor.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\motor.h</FilePath>
-            </File>
-            <File>
-              <FileName>uart.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\uart.h</FilePath>
-            </File>
-            <File>
-              <FileName>buffer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\buffer.c</FilePath>
-            </File>
-            <File>
               <FileName>green_led.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\green_led.c</FilePath>
             </File>
             <File>
-              <FileName>main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\main.c</FilePath>
-            </File>
-            <File>
-              <FileName>motor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\motor.c</FilePath>
-            </File>
-            <File>
-              <FileName>uart.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\uart.c</FilePath>
-            </File>
-            <File>
               <FileName>audio.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\audio.c</FilePath>
+            </File>
+            <File>
+              <FileName>audio.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\audio.h</FilePath>
             </File>
           </Files>
         </Group>

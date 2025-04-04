@@ -11,8 +11,6 @@
 #include "green_led.h"
 #include "audio.h"
 
-#define MASK(x) (1 << (x))
-
 int isMoving = 0;
 int isFinish = 0;
 
@@ -32,7 +30,7 @@ void parse_command_thread(void *argument){
 		if (status == osOK) {
 			decodeMessage(&b, &forward_speed, &left_speed);
 		}
-		osDelay(5);
+		osDelay(1);
 	}
 }
 
@@ -42,7 +40,7 @@ void parse_command_thread(void *argument){
 void motor_thread (void *argument) {
   for (;;) {
 		move(forward_speed, left_speed);
-		osDelay(5);
+		osDelay(1);
 	}
 }
 
