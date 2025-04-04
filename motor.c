@@ -139,6 +139,7 @@ void move_forward_or_backward(int speed, int direction) {
 }
 
 void turn_right_on_spot(int speed) {
+	speed = speed / 2;
 	move_right_forward_wheel(speed, 0);
 	move_right_backward_wheel(speed, 0);
 	move_left_forward_wheel(speed, 1);
@@ -146,6 +147,7 @@ void turn_right_on_spot(int speed) {
 }
 
 void turn_left_on_spot(int speed) {
+	speed = speed / 2;
 	move_right_forward_wheel(speed, 1);
 	move_right_backward_wheel(speed, 1);
 	move_left_forward_wheel(speed, 0);
@@ -155,6 +157,8 @@ void turn_left_on_spot(int speed) {
 void turn_left_smooth(int base_speed, int turn_factor, int direction) {
   move_left_forward_wheel(base_speed - turn_factor, direction);
 	move_left_backward_wheel(base_speed - turn_factor, direction);
+	//move_left_forward_wheel(0, direction);
+	//move_right_forward_wheel(0, direction);
   move_right_forward_wheel(base_speed, direction);
 	move_right_backward_wheel(base_speed, direction);
 }
@@ -164,6 +168,8 @@ void turn_right_smooth(int base_speed, int turn_factor, int direction) {
 	move_left_backward_wheel(base_speed, direction);
 	move_right_forward_wheel(base_speed - turn_factor, direction);
 	move_right_backward_wheel(base_speed - turn_factor, direction);
+	//move_right_forward_wheel(0, direction);
+	//move_right_backward_wheel(0, direction);
 }
 
 void stop_car() {
