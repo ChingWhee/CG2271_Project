@@ -155,10 +155,10 @@ void turn_left_on_spot(int speed) {
 }
 
 void turn_left_smooth(int base_speed, int turn_factor, int direction) {
-  move_left_forward_wheel(base_speed - turn_factor, direction);
-	move_left_backward_wheel(base_speed - turn_factor, direction);
-	//move_left_forward_wheel(0, direction);
-	//move_right_forward_wheel(0, direction);
+  //move_left_forward_wheel(base_speed - turn_factor, direction);
+	//move_left_backward_wheel(base_speed - turn_factor, direction);
+	move_left_forward_wheel(0, direction);
+	move_left_backward_wheel(0, direction);
   move_right_forward_wheel(base_speed, direction);
 	move_right_backward_wheel(base_speed, direction);
 }
@@ -166,10 +166,10 @@ void turn_left_smooth(int base_speed, int turn_factor, int direction) {
 void turn_right_smooth(int base_speed, int turn_factor, int direction) {
 	move_left_forward_wheel(base_speed, direction);
 	move_left_backward_wheel(base_speed, direction);
-	move_right_forward_wheel(base_speed - turn_factor, direction);
-	move_right_backward_wheel(base_speed - turn_factor, direction);
-	//move_right_forward_wheel(0, direction);
-	//move_right_backward_wheel(0, direction);
+	//move_right_forward_wheel(base_speed - turn_factor, direction);
+	//move_right_backward_wheel(base_speed - turn_factor, direction);
+	move_right_forward_wheel(0, direction);
+	move_right_backward_wheel(0, direction);
 }
 
 void stop_car() {
@@ -208,9 +208,16 @@ void move(int base_speed, int turn_factor){
 		}
 	}
 	
-	else if (right_direction) { // turn right
-		turn_right_smooth(base_speed, turn_factor, fwd_direction);
-	} else {
-		turn_left_smooth(base_speed, turn_factor, fwd_direction);
+	else {
+		if (turn_factor == 0) {
+			move_forward_or_backward(base_speed, fwd_direction);
+		} else {
+			if (right_direction) { // turn right
+				turn_right_smooth(base_speed, turn_factor, fwd_direction);
+			} else {
+				turn_left_smooth(base_speed, turn_factor, fwd_direction);
+			}
+		}
 	}
+	
 }
