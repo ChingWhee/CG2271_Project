@@ -116,7 +116,7 @@ void audio_thread(void *argument) {
 				melody1_note = 0;
 			}
 			
-			int noteDuration = 500 / noteDurations1[melody1_note];   // Calculate note duration
+			int noteDuration = 400 / noteDurations1[melody1_note];   // Calculate note duration
 			playNote(melody1[melody1_note]);
 			osDelay(noteDuration);
 			
