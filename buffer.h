@@ -10,6 +10,7 @@ typedef struct {
 	uint8_t start;
   int8_t forward;
   int8_t right; 
+	uint8_t buttons;
 	uint8_t end;
 } serialData;
 

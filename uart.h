@@ -7,7 +7,7 @@
 #include "cmsis_os2.h"
 
 
-#define PACKET_SIZE 4
+#define PACKET_SIZE 5
 
 #define BAUD_RATE 9600
 #define UART_TX_PORTE22 22  // Page 162
