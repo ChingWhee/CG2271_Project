@@ -139,7 +139,11 @@ void move_forward_or_backward(int speed, int direction) {
 }
 
 void turn_right_on_spot(int speed) {
-	speed = speed / 2;
+	speed = speed / 2 - 500;
+	if (speed < 0) {
+		speed = 0;
+	}
+	
 	move_right_forward_wheel(speed, 0);
 	move_right_backward_wheel(speed, 0);
 	move_left_forward_wheel(speed, 1);
@@ -147,7 +151,11 @@ void turn_right_on_spot(int speed) {
 }
 
 void turn_left_on_spot(int speed) {
-	speed = speed / 2;
+	speed = speed / 2 - 500;
+	if (speed < 0) {
+		speed = 0;
+	}
+		
 	move_right_forward_wheel(speed, 1);
 	move_right_backward_wheel(speed, 1);
 	move_left_forward_wheel(speed, 0);
